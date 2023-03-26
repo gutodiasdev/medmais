@@ -17,6 +17,7 @@ function DashboardLayout ({ children }: DashboardLayoutProps) {
         height={'100vh'}
         backgroundColor={'gray.50'}
         padding={6}
+        overflowY={'auto'}
       >
         { children }
       </Box>

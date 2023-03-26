@@ -60,9 +60,10 @@ function DashboardVerticalMenu () {
     <Box
       padding={4}
       backgroundColor={'gray.50'}
-      >
+      position={'relative'}
+    >
       <Box
-        height={'95vh'}
+        height={'94vh'}
         boxShadow={{ lg: 'xl' }}
         backgroundColor={'teal.400'}
         borderRadius={{ lg: 'xl' }}
@@ -70,6 +71,7 @@ function DashboardVerticalMenu () {
         display={'flex'}
         flexDirection={'column'}
         alignItems={'stretch'}
+        position={'sticky'}
       >
         <Menu />
       </Box>
