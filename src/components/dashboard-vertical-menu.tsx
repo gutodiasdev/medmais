@@ -18,6 +18,10 @@ const menuLinks = [
     name: 'Exames',
     link: '/painel-de-controle/exames'
   },
+  {
+    name: 'Médicos',
+    link: '/painel-de-controle/medicos'
+  },
 ]
 
 const Menu = () => {

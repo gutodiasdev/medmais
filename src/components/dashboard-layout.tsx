@@ -13,9 +13,10 @@ function DashboardLayout ({ children }: DashboardLayoutProps) {
       gridTemplateColumns={{ lg: '180px 1fr' }}
     >
       <DashboardVerticalMenu />
-      <Box 
-        height={'100vh'} 
+      <Box
+        height={'100vh'}
         backgroundColor={'gray.50'}
+        padding={6}
       >
         { children }
       </Box>
