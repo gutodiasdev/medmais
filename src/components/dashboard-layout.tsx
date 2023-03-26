@@ -1,5 +1,6 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { ReactNode } from 'react'
+import { DashboardVerticalMenu } from './dashboard-vertical-menu'
 
 type DashboardLayoutProps = {
   children: ReactNode
@@ -11,9 +12,7 @@ function DashboardLayout ({ children }: DashboardLayoutProps) {
       display={'grid'}
       gridTemplateColumns={{ lg: '180px 1fr' }}
     >
-      <Box>
-        <Text>VerticalMenu</Text>
-      </Box>
+      <DashboardVerticalMenu />
       <Box 
         height={'100vh'} 
         backgroundColor={'gray.50'}
