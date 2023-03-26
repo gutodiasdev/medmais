@@ -11,12 +11,12 @@ const menuLinks = [
     link: '/painel-de-controle/pacientes'
   },
   {
-    name: 'Consultas',
-    link: '/painel-de-controle/consultas'
-  },
-  {
     name: 'Exames',
     link: '/painel-de-controle/exames'
+  },
+  {
+    name: 'Consultas',
+    link: '/painel-de-controle/consultas'
   },
   {
     name: 'Médicos',
