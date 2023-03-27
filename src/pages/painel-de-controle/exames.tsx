@@ -20,7 +20,7 @@ import { useState } from 'react'
 import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
 
-import { DashboardLayout } from '../../components'
+import { DashboardLayout } from '@/components'
 
 export default function DashboardExams () {
   const toast = useToast()

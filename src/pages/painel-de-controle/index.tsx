@@ -1,5 +1,6 @@
 import { Text } from '@chakra-ui/react'
-import { DashboardLayout } from '../../components'
+
+import { DashboardLayout } from '@/components'
 
 export default function Dashboard () {
   return (

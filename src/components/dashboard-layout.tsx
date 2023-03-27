@@ -1,6 +1,6 @@
+import { DashboardVerticalMenu } from '@/components'
 import { Box } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { DashboardVerticalMenu } from './dashboard-vertical-menu'
 
 type DashboardLayoutProps = {
   children: ReactNode
