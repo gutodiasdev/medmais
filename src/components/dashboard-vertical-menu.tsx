@@ -1,5 +1,6 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const menuLinks = [
   {
@@ -25,6 +26,7 @@ const menuLinks = [
 ]
 
 const Menu = () => {
+  const router = useRouter()
   return (
     <VStack
       gap={'8px'}
@@ -39,8 +41,9 @@ const Menu = () => {
               width={'100%'}
               justifyContent={'center'}
               padding={'4px 0'}
+              backgroundColor={router.pathname === item.link ? 'teal.100' : 'none'}
               borderRadius={{ lg: 'md' }}
-              color={'white'}
+              color={router.pathname === item.link ? 'gray.600' : 'white'}
               _hover={{
                 backgroundColor: 'teal.100',
                 color: 'gray.900'
