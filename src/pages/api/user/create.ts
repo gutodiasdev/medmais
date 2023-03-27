@@ -20,9 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         return res.status(201).json({ message: 'Usuário criado com sucesso!' })
       } catch (e: any ) {
-        return res.status(500).json({ error: e.stack })
+        return res.status(500).json({ error: e })
       }
-    break
     default:
       return res.status(400).json({ method: 'Método não disponível.' })
   }
