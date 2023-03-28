@@ -3,6 +3,8 @@ export interface DateIsExpired {
 }
 
 export namespace DateIsExpired {
-  export type Input = {}
-  export type Ouput = {}
+  export type Input = {
+    expirationDate: number
+  }
+  export type Ouput = boolean
 }
