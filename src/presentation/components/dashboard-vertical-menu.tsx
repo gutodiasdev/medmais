@@ -1,4 +1,5 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -76,6 +77,18 @@ function DashboardVerticalMenu () {
         alignItems={'stretch'}
         position={'sticky'}
       >
+        <Box
+          position={'relative'}
+          width={'50px'}
+          height={'50px'}
+          margin={'0 auto'}
+        >
+          <Image
+            src={'/vertical-menu-logo.png'}
+            alt={'Logo menu vertical'}
+            fill
+          />
+        </Box>
         <Menu />
       </Box>
     </Box>
