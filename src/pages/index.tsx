@@ -2,7 +2,11 @@ import { Box } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
 
+import { ValidateTokenService } from '@/application/services'
+import { DayjsService } from '@/infra/libs'
 import { LoginForm } from '@/presentation/components'
+import { GetServerSideProps } from 'next'
+import { parseCookies } from 'nookies'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,4 +24,15 @@ export default function Home() {
       </Box>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx)
+  const dayjsService = new DayjsService()
+  const validateTokenSerive = new ValidateTokenService(cookies['medmais.access_token'], dayjsService)
+  const result = validateTokenSerive.execute()
+
+  return {
+    props: {}
+  }
 }

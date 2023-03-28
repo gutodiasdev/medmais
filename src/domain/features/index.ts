@@ -1,3 +1,3 @@
 export * from './date-is-expired'
 export * from './user-login'
-export * from './validate-cookie'
+export * from './validate-token'
