@@ -1,7 +1,9 @@
 import { Text } from '@chakra-ui/react'
+import { GetServerSideProps } from 'next'
+import Head from 'next/head'
+import { parseCookies } from 'nookies'
 
 import { DashboardLayout } from '@/presentation/components'
-import Head from 'next/head'
 
 export default function Dashboard () {
   return (
@@ -17,4 +19,21 @@ export default function Dashboard () {
       </DashboardLayout>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx)
+
+  if (cookies['medmais.access_token'] === undefined) {
+    return {
+      redirect: {
+        destination: '/login-necessario',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }

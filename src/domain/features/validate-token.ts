@@ -1,5 +1,5 @@
 export interface ValidateToken {
-  execute: () => ValidateToken.Output
+  execute: (input: ValidateToken.Input) => ValidateToken.Output
 }
 
 export namespace ValidateToken {
@@ -7,5 +7,5 @@ export namespace ValidateToken {
     token: string
   }
 
-  export type Output = boolean
+  export type Output = void
 }

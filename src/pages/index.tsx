@@ -28,9 +28,16 @@ export default function Home() {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx)
-  const dayjsService = new DayjsService()
-  const validateTokenSerive = new ValidateTokenService(cookies['medmais.access_token'], dayjsService)
-  const result = validateTokenSerive.execute()
+
+  if (cookies['medmais.access_token'] !== undefined) {
+    const dayjsService = new DayjsService()
+    const validateTokenSerive = new ValidateTokenService(cookies['medmais.access_token'], dayjsService)
+    validateTokenSerive.execute()
+
+    return {
+      props: {}
+    }
+  }
 
   return {
     props: {}

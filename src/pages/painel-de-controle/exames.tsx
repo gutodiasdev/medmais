@@ -15,7 +15,9 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { faker } from '@faker-js/faker'
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
+import { parseCookies } from 'nookies'
 import { useState } from 'react'
 import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
@@ -137,4 +139,21 @@ export default function DashboardExams () {
       </DashboardLayout>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx)
+
+  if (cookies['medmais.access_token'] === undefined) {
+    return {
+      redirect: {
+        destination: '/login-necessario',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
