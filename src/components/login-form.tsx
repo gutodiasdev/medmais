@@ -8,18 +8,14 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useMutation } from 'react-query'
 import * as yup from 'yup'
 
-import { api } from '@/infra/config'
-import { useRouter } from 'next/router'
-import { setCookie } from 'nookies'
-import { useMutation } from 'react-query'
+import { UserLoginService } from '@/application/services'
+import { LoginInput } from '@/domain/models'
 
-type LoginFormInput ={
-  email: string
-  password: string
-}
 const schema = yup.object({
   email: yup.string().email('Insira um email válido'),
   password: yup.string().min(6, 'A senha precisa ter ao menos 6 caracteres')
@@ -29,23 +25,18 @@ function LoginForm() {
   const toast = useToast()
   const router = useRouter()
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInput>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginInput>({
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
 
-  const submitLogin = async (input: LoginFormInput) => {
-    const { data } = await api.post<{ token: string }>('/api/session/create', input)
-    return data
-  }
-
-  const mutation = useMutation(async (data: LoginFormInput) => {
-      const result = await submitLogin(data)
-      setCookie(null, 'access_token', result.token, { maxAge: 60 * 60 * 24 })
+  const mutation = useMutation(async (data: LoginInput) => {
+      const userLoginService = new UserLoginService(data)
+      await userLoginService.submitLogin()
       router.push('/painel-de-controle')
   })
 
-  const handleLogin: SubmitHandler<LoginFormInput> = async (data) => {
+  const handleLogin: SubmitHandler<LoginInput> = async (data) => {
     try {
       mutation.mutateAsync(data)
     } catch (e: any) {
