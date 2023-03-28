@@ -15,6 +15,7 @@ import * as yup from 'yup'
 
 import { UserLoginService } from '@/application/services'
 import { LoginInput } from '@/domain/models'
+import Image from 'next/image'
 
 const schema = yup.object({
   email: yup.string().email('Insira um email válido'),
@@ -37,18 +38,22 @@ function LoginForm() {
   })
 
   const handleLogin: SubmitHandler<LoginInput> = async (data) => {
-    try {
-      mutation.mutateAsync(data)
-    } catch (e: any) {
+    mutation.mutateAsync(data).catch(() => {
       toast({
         status: 'error',
-        description: e
+        description: 'Email ou senha estão incorretos!'
       })
-    }
+    })
   }
 
   return (
-    <Box display={'grid'} alignItems={'center'} width={'100%'} justifyContent={'center'} height={'100vh'}>
+    <Box
+      display={'grid'}
+      alignItems={'center'}
+      width={'100%'}
+      justifyContent={'center'}
+      height={'100vh'}
+    >
       <Box
         as='form'
         display={'grid'}
@@ -61,6 +66,18 @@ function LoginForm() {
         padding={6}
         onSubmit={handleSubmit(handleLogin)}
       >
+        <Box
+          position={'relative'}
+          width={'150px'}
+          height={'50px'}
+          margin={'0 auto'}
+        >
+          <Image
+            src={'/logo-meddash.png'}
+            alt='Logo Meddash'
+            fill
+          />
+        </Box>
         <FormControl isInvalid={!!errors.email}>
           <FormLabel>Email</FormLabel>
           <Input
