@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
 
-import { LoginForm } from '@/components'
+import { LoginForm } from '@/presentation/components'
 
 const inter = Inter({ subsets: ['latin'] })
 

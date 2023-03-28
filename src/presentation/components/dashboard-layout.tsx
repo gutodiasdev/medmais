@@ -1,4 +1,4 @@
-import { DashboardVerticalMenu } from '@/components'
+import { DashboardVerticalMenu } from '@/presentation/components'
 import { Box } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 

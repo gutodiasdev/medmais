@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react'
 
-import { DashboardLayout } from '@/components'
+import { DashboardLayout } from '@/presentation/components'
 import Head from 'next/head'
 
 export default function Dashboard () {
