@@ -35,6 +35,7 @@ model Patient {
 
 model Medic {
   id String @id @default(uuid())
+  name String
   crm String @unique
   speciality String
   userId String @unique
