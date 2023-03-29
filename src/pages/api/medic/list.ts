@@ -11,8 +11,18 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
               isNot: null
             }
           },
-          include: {
-            isMedic: true
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            isMedic: {
+              select: {
+                id: true,
+                name: true,
+                crm: true,
+                speciality: true,
+              }
+            }
           }
         })
         return res.status(200).json(medics)
