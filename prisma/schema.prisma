@@ -23,3 +23,11 @@ enum Role {
   DOCTOR
   COLABORATOR
 }
+
+model Patient {
+  id String @id @default(uuid())
+  name String
+  rg String
+  age String
+  weight String
+}
