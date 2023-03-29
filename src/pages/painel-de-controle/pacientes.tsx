@@ -12,6 +12,7 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
   useToast
 } from '@chakra-ui/react'
 import { faker } from '@faker-js/faker'
@@ -22,11 +23,12 @@ import { useState } from 'react'
 import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
 
-import { DashboardLayout } from '@/presentation/components'
+import { CreatePatientModal, DashboardLayout } from '@/presentation/components'
 
 export default function DashboardPatients () {
   const toast = useToast()
   const [searchTerm, setSearchTerm] = useState('')
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handlePatientSearch = () => {
     if (searchTerm !== '') {
@@ -52,6 +54,7 @@ export default function DashboardPatients () {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+      <CreatePatientModal isOpen={isOpen} onClose={onClose} />
       <DashboardLayout>
         <Flex alignItems={'center'} width={'100%'} justifyContent={'space-between'}>
           <Heading as='h1' fontSize={'xl'} color={'gray.600'}>
@@ -60,6 +63,7 @@ export default function DashboardPatients () {
           <Button
             variant={'outline'}
             colorScheme={'teal'}
+            onClick={onOpen}
           >
             Adicionar paciente
           </Button>
