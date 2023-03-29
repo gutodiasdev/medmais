@@ -5,6 +5,7 @@ import {
   FormControl,
   Heading,
   HStack, IconButton, Input,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -15,15 +16,25 @@ import {
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
-import { faker } from '@faker-js/faker'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { parseCookies } from 'nookies'
 import { useState } from 'react'
 import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
+import { RxUpdate } from 'react-icons/rx'
+import { useQuery } from 'react-query'
 
+import { api } from '@/infra/config'
 import { CreatePatientModal, DashboardLayout } from '@/presentation/components'
+
+type PatientsResponse = {
+  id: string
+  name: string
+  rg: string
+  age: string
+  weight: string
+}
 
 export default function DashboardPatients () {
   const toast = useToast()
@@ -44,6 +55,19 @@ export default function DashboardPatients () {
         duration: 1000
       })
     }
+  }
+
+  const fetchPatients = async () => {
+    const { data } = await api.get<PatientsResponse[]>('/api/patient/list')
+    return data
+  }
+
+  const { data, isLoading, isError, refetch, isRefetching } = useQuery('patients', fetchPatients, {
+    staleTime: 1000 * 60 * 60
+  })
+
+  const handleRefectch = async () => {
+    await refetch({queryKey: 'patients'})
   }
 
   return (
@@ -80,8 +104,25 @@ export default function DashboardPatients () {
             }}
             onClick={handlePatientSearch}
             boxShadow={{ lg: 'lg'}}
+
           >
             Procurar
+          </Button>
+        </Flex>
+        <Flex
+          alignItems={'center'}
+          width={'100%'}
+          justifyContent={'flex-end'}
+          paddingY={2}
+        >
+          <Button
+            colorScheme={'teal'}
+            onClick={handleRefectch}
+            leftIcon={<RxUpdate />}
+            size={'xs'}
+            isLoading={isRefetching}
+          >
+            Atualizar
           </Button>
         </Flex>
         <Box
@@ -89,56 +130,76 @@ export default function DashboardPatients () {
           borderColor={'gray.200'}
           borderRadius={{ lg: 'xl' }}
         >
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Nome</Th>
-                <Th>Documento</Th>
-                <Th></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {Array.from({ length: 10 }).map((item, index) => {
-                return (
-                  <Tr key={index}>
-                    <Td width={'65%'}>{faker.name.fullName()}</Td>
-                    <Td>{faker.random.numeric(11)}</Td>
-                    <Td>
-                      <HStack
-                        justifyContent={'flex-end'}
-                      >
-                        <Tooltip label={'Ver paciente'} borderRadius={'md'}>
-                          <IconButton
-                            aria-label='view-patient'
-                            title='teste'
-                            size={{ lg: 'sm' }}
-                          >
-                            <AiOutlineEye />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip label={'Editar paciente'} borderRadius={'md'}>
-                          <IconButton
-                            aria-label='edit-patient'
-                            size={{ lg: 'sm' }}
-                          >
-                            <AiOutlineEdit />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
-                          <IconButton
-                            aria-label='edit-patient'
-                            size={{ lg: 'sm' }}
-                          >
-                            <BiTrashAlt />
-                          </IconButton>
-                        </Tooltip>
-                      </HStack>
-                    </Td>
+          {
+            isLoading ? (
+              <Box padding={4}>
+                <Spinner />
+              </Box>
+            ) : isError ? (
+              <Box padding={4}>
+                <Heading as='h2' fontSize={'lg'}>
+                  Ocorreu um erro ao encontrar os pacientes
+                </Heading>
+              </Box>
+            ) : (data?.length === 0 ) ? (
+              <Box padding={4}>
+                <Heading as='h2' fontSize={'lg'} color={'gray.600'}>
+                  Você ainda não possui pacientes cadastrados
+                </Heading>
+              </Box>
+            ) : (
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>Nome</Th>
+                    <Th>Documento</Th>
+                    <Th></Th>
                   </Tr>
-                )
-              })}
-            </Tbody>
-          </Table>
+                </Thead>
+                <Tbody>
+                  {data?.map((item, index) => {
+                    return (
+                      <Tr key={index}>
+                        <Td width={'65%'}>{item.name}</Td>
+                        <Td>{item.rg}</Td>
+                        <Td>
+                          <HStack
+                            justifyContent={'flex-end'}
+                          >
+                            <Tooltip label={'Ver paciente'} borderRadius={'md'}>
+                              <IconButton
+                                aria-label='view-patient'
+                                title='teste'
+                                size={{ lg: 'sm' }}
+                              >
+                                <AiOutlineEye />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip label={'Editar paciente'} borderRadius={'md'}>
+                              <IconButton
+                                aria-label='edit-patient'
+                                size={{ lg: 'sm' }}
+                              >
+                                <AiOutlineEdit />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
+                              <IconButton
+                                aria-label='edit-patient'
+                                size={{ lg: 'sm' }}
+                              >
+                                <BiTrashAlt />
+                              </IconButton>
+                            </Tooltip>
+                          </HStack>
+                        </Td>
+                      </Tr>
+                    )
+                  })}
+                </Tbody>
+              </Table>
+            )
+          }
         </Box>
       </DashboardLayout>
     </>

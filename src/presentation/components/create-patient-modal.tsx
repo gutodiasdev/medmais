@@ -1,4 +1,5 @@
 import { api } from '@/infra/config'
+import { queryClient } from '@/pages/_app'
 import {
   Box,
   Button,
@@ -47,16 +48,21 @@ export function CreatePatientModal ({ isOpen, onClose }: CreatePatientModalProps
   })
 
   const mutation = useMutation(async (data: CreatePatientInputs) => {
-    await api.post('/patient/create', data)
+    await api.post('/api/patient/create', data)
   })
 
   const submitHandler: SubmitHandler<CreatePatientInputs> = async (data) => {
-    await mutation.mutateAsync(data).catch(() => {
+    try {
+      await mutation.mutateAsync(data)
+      queryClient.invalidateQueries(['patients'])
+    } catch (e: any) {
       toast({
         status: 'error',
-        description: 'Não foi possível cadastrar o paciente.'
+        description: e.code
       })
-    }).finally(onClose)
+    } finally {
+      onClose()
+    }
   }
 
   return (
