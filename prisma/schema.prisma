@@ -15,6 +15,7 @@ model User {
   email String @unique
   password String
   role Role @default(COLABORATOR)
+  isMedic Medic?
 }
 
 enum Role {
@@ -30,4 +31,12 @@ model Patient {
   rg String @unique
   age String
   weight String
+}
+
+model Medic {
+  id String @id @default(uuid())
+  crm String @unique
+  speciality String
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
