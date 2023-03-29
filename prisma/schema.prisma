@@ -27,7 +27,7 @@ enum Role {
 model Patient {
   id String @id @default(uuid())
   name String
-  rg String
+  rg String @unique
   age String
   weight String
 }
