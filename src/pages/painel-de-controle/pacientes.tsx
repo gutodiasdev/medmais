@@ -38,22 +38,27 @@ type PatientsResponse = {
 
 export default function DashboardPatients () {
   const toast = useToast()
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState<string>()
+  const [foundPatients, setFoundPatients] = useState<PatientsResponse[]>()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const handlePatientSearch = () => {
-    if (searchTerm !== '') {
+  const fetchPatientSearch = async () => {
+    const { data } = await api.get<PatientsResponse[]>(`/api/patient/search?searchTerm=${searchTerm}`)
+    return data
+  }
+
+  const handlePatientSearch = async () => {
+    if (searchTerm === '') {
       toast({
-        status: 'success',
-        description: searchTerm,
+        status: 'warning',
+        description: 'Você precisa inserir uma informação na busca!',
         duration: 1000
       })
     } else {
-      toast({
-        status: 'warning',
-        description: 'Inseria o nome ou documento do paciente',
-        duration: 1000
-      })
+      const patientsFound = await fetchPatientSearch()
+      console.log(patientsFound)
+      setFoundPatients(patientsFound)
+      return patientsFound
     }
   }
 
@@ -67,7 +72,7 @@ export default function DashboardPatients () {
   })
 
   const handleRefectch = async () => {
-    await refetch({queryKey: 'patients'})
+    await refetch({ queryKey: 'patients' })
   }
 
   return (
@@ -114,7 +119,17 @@ export default function DashboardPatients () {
           width={'100%'}
           justifyContent={'flex-end'}
           paddingY={2}
+          gap={2}
         >
+          <Button
+            variant={'outline'}
+            colorScheme={'teal'}
+            onClick={() => setFoundPatients(undefined)}
+            leftIcon={<RxUpdate />}
+            size={'xs'}
+          >
+            Limpar busca
+          </Button>
           <Button
             colorScheme={'teal'}
             onClick={handleRefectch}
@@ -157,45 +172,89 @@ export default function DashboardPatients () {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data?.map((item, index) => {
-                    return (
-                      <Tr key={index}>
-                        <Td width={'65%'}>{item.name}</Td>
-                        <Td>{item.rg}</Td>
-                        <Td>
-                          <HStack
-                            justifyContent={'flex-end'}
-                          >
-                            <Tooltip label={'Ver paciente'} borderRadius={'md'}>
-                              <IconButton
-                                aria-label='view-patient'
-                                title='teste'
-                                size={{ lg: 'sm' }}
+                  {
+                    (foundPatients !== undefined) ? (
+                      foundPatients?.map((item, index) => {
+                        return (
+                          <Tr key={index}>
+                            <Td width={'65%'}>{item.name}</Td>
+                            <Td>{item.rg}</Td>
+                            <Td>
+                              <HStack
+                                justifyContent={'flex-end'}
                               >
-                                <AiOutlineEye />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip label={'Editar paciente'} borderRadius={'md'}>
-                              <IconButton
-                                aria-label='edit-patient'
-                                size={{ lg: 'sm' }}
+                                <Tooltip label={'Ver paciente'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='view-patient'
+                                    title='teste'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEye />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Editar paciente'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEdit />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <BiTrashAlt />
+                                  </IconButton>
+                                </Tooltip>
+                              </HStack>
+                            </Td>
+                          </Tr>
+                        )
+                      })
+                    ) : (
+                      data?.map((item, index) => {
+                        return (
+                          <Tr key={index}>
+                            <Td width={'65%'}>{item.name}</Td>
+                            <Td>{item.rg}</Td>
+                            <Td>
+                              <HStack
+                                justifyContent={'flex-end'}
                               >
-                                <AiOutlineEdit />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
-                              <IconButton
-                                aria-label='edit-patient'
-                                size={{ lg: 'sm' }}
-                              >
-                                <BiTrashAlt />
-                              </IconButton>
-                            </Tooltip>
-                          </HStack>
-                        </Td>
-                      </Tr>
+                                <Tooltip label={'Ver paciente'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='view-patient'
+                                    title='teste'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEye />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Editar paciente'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEdit />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <BiTrashAlt />
+                                  </IconButton>
+                                </Tooltip>
+                              </HStack>
+                            </Td>
+                          </Tr>
+                        )
+                      })
                     )
-                  })}
+                  }
                 </Tbody>
               </Table>
             )
