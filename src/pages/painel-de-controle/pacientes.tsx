@@ -26,7 +26,7 @@ import { RxUpdate } from 'react-icons/rx'
 import { useQuery } from 'react-query'
 
 import { api } from '@/infra/config'
-import { CreatePatientModal, DashboardLayout, DeletePatientModal } from '@/presentation/components'
+import { CreatePatientModal, DashboardLayout, DeletePatientModal, ViewPatientModal } from '@/presentation/components'
 
 type PatientsResponse = {
   id: string
@@ -39,10 +39,11 @@ type PatientsResponse = {
 export default function DashboardPatients () {
   const toast = useToast()
   const [searchTerm, setSearchTerm] = useState<string>()
-  const [deleteUserId, setDeleteUserId] = useState<string>()
+  const [userId, setUserId] = useState<string>()
   const [foundPatients, setFoundPatients] = useState<PatientsResponse[]>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const deleteUserModal = useDisclosure()
+  const viewUserModal = useDisclosure()
 
   const fetchPatientSearch = async () => {
     const { data } = await api.get<PatientsResponse[]>(`/api/patient/search?searchTerm=${searchTerm}`)
@@ -230,6 +231,10 @@ export default function DashboardPatients () {
                                     aria-label='view-patient'
                                     title='teste'
                                     size={{ lg: 'sm' }}
+                                    onClick={() => {
+                                      setUserId(item.id)
+                                      viewUserModal.onOpen()
+                                    }}
                                   >
                                     <AiOutlineEye />
                                   </IconButton>
@@ -247,7 +252,7 @@ export default function DashboardPatients () {
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
                                     onClick={() => {
-                                      setDeleteUserId(item.id)
+                                      setUserId(item.id)
                                       deleteUserModal.onOpen()
                                     }}
                                   >
@@ -267,7 +272,8 @@ export default function DashboardPatients () {
           }
         </Box>
       </DashboardLayout>
-      <DeletePatientModal isOpen={deleteUserModal.isOpen} onClose={deleteUserModal.onClose} userId={deleteUserId} />
+      <DeletePatientModal isOpen={deleteUserModal.isOpen} onClose={deleteUserModal.onClose} userId={userId} />
+      <ViewPatientModal isOpen={viewUserModal.isOpen} onClose={viewUserModal.onClose} userId={userId} />
     </>
   )
 }
