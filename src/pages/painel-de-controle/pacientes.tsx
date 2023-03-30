@@ -26,7 +26,7 @@ import { RxUpdate } from 'react-icons/rx'
 import { useQuery } from 'react-query'
 
 import { api } from '@/infra/config'
-import { CreatePatientModal, DashboardLayout } from '@/presentation/components'
+import { CreatePatientModal, DashboardLayout, DeletePatientModal } from '@/presentation/components'
 
 type PatientsResponse = {
   id: string
@@ -39,8 +39,10 @@ type PatientsResponse = {
 export default function DashboardPatients () {
   const toast = useToast()
   const [searchTerm, setSearchTerm] = useState<string>()
+  const [deleteUserId, setDeleteUserId] = useState<string>()
   const [foundPatients, setFoundPatients] = useState<PatientsResponse[]>()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const deleteUserModal = useDisclosure()
 
   const fetchPatientSearch = async () => {
     const { data } = await api.get<PatientsResponse[]>(`/api/patient/search?searchTerm=${searchTerm}`)
@@ -244,6 +246,10 @@ export default function DashboardPatients () {
                                   <IconButton
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
+                                    onClick={() => {
+                                      setDeleteUserId(item.id)
+                                      deleteUserModal.onOpen()
+                                    }}
                                   >
                                     <BiTrashAlt />
                                   </IconButton>
@@ -261,6 +267,7 @@ export default function DashboardPatients () {
           }
         </Box>
       </DashboardLayout>
+      <DeletePatientModal isOpen={deleteUserModal.isOpen} onClose={deleteUserModal.onClose} userId={deleteUserId} />
     </>
   )
 }
