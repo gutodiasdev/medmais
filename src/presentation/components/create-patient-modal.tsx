@@ -10,7 +10,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   useToast,
@@ -121,9 +120,6 @@ export function CreatePatientModal ({ isOpen, onClose }: CreatePatientModalProps
             </Box>
           </VStack>
         </ModalBody>
-        <ModalFooter>
-
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )

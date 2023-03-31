@@ -25,16 +25,16 @@ import { BiTrashAlt } from 'react-icons/bi'
 import { RxUpdate } from 'react-icons/rx'
 import { useQuery } from 'react-query'
 
+import { fetchPatientSearch } from '@/application/helpers'
+import { PatientsResponse } from '@/domain/models'
 import { api } from '@/infra/config'
-import { CreatePatientModal, DashboardLayout, DeletePatientModal, EditPatientModal, ViewPatientModal } from '@/presentation/components'
-
-type PatientsResponse = {
-  id: string
-  name: string
-  rg: string
-  age: string
-  weight: string
-}
+import {
+  CreatePatientModal,
+  DashboardLayout,
+  DeletePatientModal,
+  EditPatientModal,
+  ViewPatientModal
+} from '@/presentation/components'
 
 export default function DashboardPatients () {
   const toast = useToast()
@@ -46,11 +46,6 @@ export default function DashboardPatients () {
   const viewUserModal = useDisclosure()
   const editUserModal = useDisclosure()
 
-  const fetchPatientSearch = async () => {
-    const { data } = await api.get<PatientsResponse[]>(`/api/patient/search?searchTerm=${searchTerm}`)
-    return data
-  }
-
   const handlePatientSearch = async () => {
     if (searchTerm === '') {
       toast({
@@ -59,8 +54,7 @@ export default function DashboardPatients () {
         duration: 1000
       })
     } else {
-      const patientsFound = await fetchPatientSearch()
-      console.log(patientsFound)
+      const patientsFound = await fetchPatientSearch(searchTerm)
       setFoundPatients(patientsFound)
       return patientsFound
     }
