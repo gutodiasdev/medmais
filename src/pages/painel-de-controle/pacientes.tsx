@@ -26,7 +26,7 @@ import { RxUpdate } from 'react-icons/rx'
 import { useQuery } from 'react-query'
 
 import { api } from '@/infra/config'
-import { CreatePatientModal, DashboardLayout, DeletePatientModal, ViewPatientModal } from '@/presentation/components'
+import { CreatePatientModal, DashboardLayout, DeletePatientModal, EditPatientModal, ViewPatientModal } from '@/presentation/components'
 
 type PatientsResponse = {
   id: string
@@ -44,6 +44,7 @@ export default function DashboardPatients () {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const deleteUserModal = useDisclosure()
   const viewUserModal = useDisclosure()
+  const editUserModal = useDisclosure()
 
   const fetchPatientSearch = async () => {
     const { data } = await api.get<PatientsResponse[]>(`/api/patient/search?searchTerm=${searchTerm}`)
@@ -243,6 +244,10 @@ export default function DashboardPatients () {
                                   <IconButton
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
+                                    onClick={() => {
+                                      setUserId(item.id)
+                                      editUserModal.onOpen()
+                                    }}
                                   >
                                     <AiOutlineEdit />
                                   </IconButton>
@@ -274,6 +279,7 @@ export default function DashboardPatients () {
       </DashboardLayout>
       <DeletePatientModal isOpen={deleteUserModal.isOpen} onClose={deleteUserModal.onClose} userId={userId} />
       <ViewPatientModal isOpen={viewUserModal.isOpen} onClose={viewUserModal.onClose} userId={userId} />
+      <EditPatientModal isOpen={editUserModal.isOpen} onClose={editUserModal.onClose} userId={userId} />
     </>
   )
 }
