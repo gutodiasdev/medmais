@@ -1,77 +1,93 @@
-import { Box, Flex, VStack } from '@chakra-ui/react'
+import { Box, Flex, Stack } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { BiHomeAlt } from 'react-icons/bi'
+import { BsPeopleFill } from 'react-icons/bs'
+import { GiMedicalPackAlt } from 'react-icons/gi'
+import { RiFlaskLine, RiStethoscopeFill } from 'react-icons/ri'
 
 const menuLinks = [
   {
     name: 'Início',
-    link: '/painel-de-controle'
+    link: '/painel-de-controle',
+    icon: <BiHomeAlt />
   },
   {
     name: 'Pacientes',
-    link: '/painel-de-controle/pacientes'
+    link: '/painel-de-controle/pacientes',
+    icon: <BsPeopleFill />
   },
   {
     name: 'Exames',
-    link: '/painel-de-controle/exames'
+    link: '/painel-de-controle/exames',
+    icon: <RiFlaskLine />
   },
   {
     name: 'Consultas',
-    link: '/painel-de-controle/consultas'
+    link: '/painel-de-controle/consultas',
+    icon: <GiMedicalPackAlt />
   },
   {
     name: 'Médicos',
-    link: '/painel-de-controle/medicos'
+    link: '/painel-de-controle/medicos',
+    icon: <RiStethoscopeFill />
   },
 ]
 
 const Menu = () => {
   const router = useRouter()
   return (
-    <VStack
-      gap={'8px'}
-    >
+    <Stack>
       {
         menuLinks.map((item, index) => {
           return (
             <Flex
               key={index}
               as={Link}
+              fontSize={'0.925rem'}
+              fontWeight={'semibold'}
               href={item.link}
               width={'100%'}
+              alignItems={'center'}
               justifyContent={'center'}
               padding={'4px 0'}
-              backgroundColor={router.pathname === item.link ? 'teal.100' : 'none'}
+              backgroundColor={router.pathname === item.link ? 'teal.400' : 'none'}
               borderRadius={{ lg: 'md' }}
-              color={router.pathname === item.link ? 'gray.600' : 'white'}
+              color={'white'}
               _hover={{
-                backgroundColor: 'teal.100',
-                color: 'gray.900'
+                backgroundColor: 'teal.400',
               }}
             >
-              {item.name}
+              <Flex
+                gap={2}
+                alignItems={'center'}
+                marginLeft={'8px'}
+                width={'100%'}
+              >
+                {item.icon}
+                {item.name}
+              </Flex>
             </Flex>
           )
         })
       }
-    </VStack>
+    </Stack>
   )
 }
 
-function DashboardVerticalMenu () {
+function DashboardVerticalMenu() {
   return (
     <Box
-      padding={4}
       backgroundColor={'gray.50'}
       position={'relative'}
     >
       <Box
-        height={'94vh'}
+        height={'100vh'}
         boxShadow={{ lg: 'xl' }}
-        backgroundColor={'teal.400'}
-        borderRadius={{ lg: 'xl' }}
-        padding={4}
+        backgroundColor={'teal.500'}
+        borderRadius={{ lg: '0 24px 24px 0' }}
+        padding={'16px 8px'}
         display={'flex'}
         flexDirection={'column'}
         alignItems={'stretch'}
@@ -79,12 +95,13 @@ function DashboardVerticalMenu () {
       >
         <Box
           position={'relative'}
-          width={'50px'}
-          height={'50px'}
+          width={'80px'}
+          height={'20px'}
           margin={'0 auto'}
+          marginBottom={'16px'}
         >
           <Image
-            src={'/vertical-menu-logo.png'}
+            src={'/dashboard-logo.png'}
             alt={'Logo menu vertical'}
             fill
           />

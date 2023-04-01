@@ -10,7 +10,7 @@ function DashboardLayout ({ children }: DashboardLayoutProps) {
   return (
     <Box
       display={'grid'}
-      gridTemplateColumns={{ lg: '180px 1fr' }}
+      gridTemplateColumns={{ lg: '120px 1fr' }}
     >
       <DashboardVerticalMenu />
       <Box
