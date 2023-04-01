@@ -11,11 +11,11 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  email String @unique
+  id       String @id @default(uuid())
+  email    String @unique
   password String
-  role Role @default(COLABORATOR)
-  isMedic Medic?
+  role     Role   @default(COLABORATOR)
+  isMedic  Medic?
 }
 
 enum Role {
@@ -26,18 +26,36 @@ enum Role {
 }
 
 model Patient {
-  id String @id @default(uuid())
-  name String
-  rg String @unique
-  age String
+  id     String @id @default(uuid())
+  name   String
+  rg     String @unique
+  age    String
   weight String
 }
 
 model Medic {
-  id String @id @default(uuid())
-  name String
-  crm String @unique
+  id         String @id @default(uuid())
+  name       String
+  crm        String @unique
   speciality String
-  userId String @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String @unique
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Partner {
+  id               String          @id @default(uuid())
+  name             String
+  responsible      String
+  responsibleEmail String
+  responsiblePhone String
+  address          PartnerAddress?
+}
+
+model PartnerAddress {
+  id     String @id @default(uuid())
+  street String
+  number String
+
+  partnerId String  @unique
+  partner   Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
 }

@@ -4,13 +4,14 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { parseCookies } from 'nookies'
 
+import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
+
 import { fetchSinglePatient } from '@/application/helpers'
 import {
   DashboardLayout,
   SinglePatientPage
 } from '@/presentation/components'
-import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
 
 type QueryProps = {
   id: string
@@ -21,9 +22,9 @@ export default function PatientSinglePage () {
 
   const { data, isLoading, isError } = useQuery(['patient', id],
   async () => await fetchSinglePatient({ patientId: id }),
-  {
-    staleTime: 1000 * 60 * 5
-  }
+    {
+      staleTime: 1000 * 60 * 5
+    }
   )
 
   return (
