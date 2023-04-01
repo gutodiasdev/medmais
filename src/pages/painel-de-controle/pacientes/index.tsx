@@ -35,6 +35,7 @@ import {
   EditPatientModal,
   ViewPatientModal
 } from '@/presentation/components'
+import Link from 'next/link'
 
 export default function DashboardPatients () {
   const toast = useToast()
@@ -212,11 +213,11 @@ export default function DashboardPatients () {
                         )
                       })
                     ) : (
-                      data?.map((item, index) => {
+                      data?.map((patient, index) => {
                         return (
                           <Tr key={index}>
-                            <Td width={'65%'}>{item.name}</Td>
-                            <Td>{item.rg}</Td>
+                            <Td width={'65%'}>{patient.name}</Td>
+                            <Td>{patient.rg}</Td>
                             <Td>
                               <HStack
                                 justifyContent={'flex-end'}
@@ -227,7 +228,7 @@ export default function DashboardPatients () {
                                     title='teste'
                                     size={{ lg: 'sm' }}
                                     onClick={() => {
-                                      setUserId(item.id)
+                                      setUserId(patient.id)
                                       viewUserModal.onOpen()
                                     }}
                                   >
@@ -236,12 +237,10 @@ export default function DashboardPatients () {
                                 </Tooltip>
                                 <Tooltip label={'Editar paciente'} borderRadius={'md'}>
                                   <IconButton
+                                    as={Link}
+                                    href={`/painel-de-controle/pacientes/${patient.id}`}
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
-                                    onClick={() => {
-                                      setUserId(item.id)
-                                      editUserModal.onOpen()
-                                    }}
                                   >
                                     <AiOutlineEdit />
                                   </IconButton>
@@ -251,7 +250,7 @@ export default function DashboardPatients () {
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
                                     onClick={() => {
-                                      setUserId(item.id)
+                                      setUserId(patient.id)
                                       deleteUserModal.onOpen()
                                     }}
                                   >
