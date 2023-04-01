@@ -1,4 +1,4 @@
-import { PatientAlergies, PatientLastAppointments, PatientLastExams, PatientSurgeries } from '@/presentation/components'
+import { PatientAlergies, PatientLastAppointments, PatientLastExams, PatientMedicines, PatientSurgeries } from '@/presentation/components'
 import { Box, Grid, Heading } from '@chakra-ui/react'
 
 type SinglePatientPageProps = {
@@ -193,7 +193,7 @@ export function SinglePatientPage({ data }: SinglePatientPageProps) {
             >
               Medicamentos
             </Heading>
-
+            <PatientMedicines patient={data?.id} />
           </Box>
           <Box>
             <Heading

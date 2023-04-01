@@ -1,10 +1,10 @@
 import { Box, Heading, Text } from '@chakra-ui/react'
 
-type PatientAlergiesProps = {
+type PatientMedicinesProps = {
   patient: string | undefined
 }
 
-export function PatientAlergies({ patient }: PatientAlergiesProps) {
+export function PatientMedicines({ patient }: PatientMedicinesProps) {
 
   if (patient === undefined) {
     return (
