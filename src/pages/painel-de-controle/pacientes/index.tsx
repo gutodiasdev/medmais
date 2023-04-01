@@ -224,25 +224,12 @@ export default function DashboardPatients () {
                               >
                                 <Tooltip label={'Ver paciente'} borderRadius={'md'}>
                                   <IconButton
-                                    aria-label='view-patient'
-                                    title='teste'
-                                    size={{ lg: 'sm' }}
-                                    onClick={() => {
-                                      setUserId(patient.id)
-                                      viewUserModal.onOpen()
-                                    }}
-                                  >
-                                    <AiOutlineEye />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip label={'Editar paciente'} borderRadius={'md'}>
-                                  <IconButton
                                     as={Link}
                                     href={`/painel-de-controle/pacientes/${patient.id}`}
                                     aria-label='edit-patient'
                                     size={{ lg: 'sm' }}
                                   >
-                                    <AiOutlineEdit />
+                                    <AiOutlineEye />
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
