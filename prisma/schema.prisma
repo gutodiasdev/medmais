@@ -41,23 +41,3 @@ model Medic {
   userId     String @unique
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
-model Partner {
-  id               String          @id @default(uuid())
-  name             String
-  responsible      String
-  responsibleEmail String
-  responsiblePhone String
-  address          PartnerAddress?
-}
-
-model PartnerAddress {
-  id      String @id @default(uuid())
-  street  String
-  number  String
-  phone   String
-  zipcode String
-
-  partnerId String  @unique
-  partner   Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-}

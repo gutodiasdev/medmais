@@ -4,12 +4,13 @@ import Head from 'next/head'
 
 import { ValidateTokenService } from '@/application/services'
 import { DayjsService } from '@/infra/libs'
+import { LoginForm } from '@/presentation/components'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Login() {
   return (
     <>
       <Head>
@@ -19,9 +20,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Box as='main'>
-        <Box>
-
-        </Box>
+        <LoginForm />
       </Box>
     </>
   )
