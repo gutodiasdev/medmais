@@ -67,7 +67,7 @@ export default function DashboardPatients () {
   }
 
   const { data, isLoading, isError, refetch, isRefetching } = useQuery('patients', fetchPatients, {
-    staleTime: 1000 * 60 * 60
+    staleTime: 1000 * 60 * 60 * 24,
   })
 
   const handleRefectch = async () => {
