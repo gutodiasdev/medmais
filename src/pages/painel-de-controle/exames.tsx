@@ -22,6 +22,7 @@ import { useState } from 'react'
 import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
 
+import { api } from '@/infra/config'
 import { DashboardLayout } from '@/presentation/components'
 
 export default function DashboardExams () {
@@ -42,6 +43,11 @@ export default function DashboardExams () {
         duration: 1000
       })
     }
+  }
+
+  const fetchExams = async () => {
+    const { data } = await api.get('/api/exam/all')
+    return data
   }
 
   return (

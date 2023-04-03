@@ -31,9 +31,7 @@ import { api } from '@/infra/config'
 import {
   CreatePatientModal,
   DashboardLayout,
-  DeletePatientModal,
-  EditPatientModal,
-  ViewPatientModal
+  DeletePatientModal, ViewPatientModal
 } from '@/presentation/components'
 import Link from 'next/link'
 
@@ -259,7 +257,6 @@ export default function DashboardPatients () {
       </DashboardLayout>
       <DeletePatientModal isOpen={deleteUserModal.isOpen} onClose={deleteUserModal.onClose} userId={userId} />
       <ViewPatientModal isOpen={viewUserModal.isOpen} onClose={viewUserModal.onClose} userId={userId} />
-      <EditPatientModal isOpen={editUserModal.isOpen} onClose={editUserModal.onClose} userId={userId} />
     </>
   )
 }
