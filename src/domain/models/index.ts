@@ -1,4 +1,5 @@
 export * from './create-partner-inputs'
+export * from './exams-response'
 export * from './login-input'
 export * from './login-output'
 export * from './patients-response'
