@@ -1,3 +1,4 @@
+export * from './create-exam-modal'
 export * from './create-patient-modal'
 export * from './dashboard-layout'
 export * from './dashboard-vertical-menu'

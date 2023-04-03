@@ -1,3 +1,4 @@
+export * from './create-exam-input'
 export * from './create-partner-inputs'
 export * from './exams-response'
 export * from './login-input'
