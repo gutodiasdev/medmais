@@ -41,3 +41,9 @@ model Medic {
   userId     String @unique
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Exam {
+  id    String  @id @default(uuid())
+  name  String
+  price Decimal
+}
