@@ -29,7 +29,7 @@ import { fetchPatientSearch } from '@/application/helpers'
 import { PatientsResponse } from '@/domain/models'
 import { api } from '@/infra/config'
 import {
-  CreatePatientModal,
+  CreateExamModal,
   DashboardLayout,
   DeletePatientModal, ViewPatientModal
 } from '@/presentation/components'
@@ -43,7 +43,6 @@ export default function DashboardPatients () {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const deleteUserModal = useDisclosure()
   const viewUserModal = useDisclosure()
-  const editUserModal = useDisclosure()
 
   const handlePatientSearch = async () => {
     if (searchTerm === '') {
@@ -55,7 +54,6 @@ export default function DashboardPatients () {
     } else {
       const patientsFound = await fetchPatientSearch(searchTerm)
       setFoundPatients(patientsFound)
-      return patientsFound
     }
   }
 
@@ -80,7 +78,7 @@ export default function DashboardPatients () {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <CreatePatientModal isOpen={isOpen} onClose={onClose} />
+      <CreateExamModal isOpen={isOpen} onClose={onClose} />
       <DashboardLayout>
         <Flex alignItems={'center'} width={'100%'} justifyContent={'space-between'}>
           <Heading as='h1' fontSize={'xl'} color={'gray.600'}>

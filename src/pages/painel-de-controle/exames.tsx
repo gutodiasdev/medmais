@@ -5,6 +5,7 @@ import {
   FormControl,
   Heading,
   HStack, IconButton, Input,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -12,42 +13,53 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
   useToast
 } from '@chakra-ui/react'
-import { faker } from '@faker-js/faker'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { parseCookies } from 'nookies'
 import { useState } from 'react'
-import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai'
+import { AiOutlineEdit } from 'react-icons/ai'
 import { BiTrashAlt } from 'react-icons/bi'
+import { RxUpdate } from 'react-icons/rx'
+import { useQuery } from 'react-query'
 
+import { fetchExamSearch, realFormatter } from '@/application/helpers'
+import { ExamResponse } from '@/domain/models'
 import { api } from '@/infra/config'
-import { DashboardLayout } from '@/presentation/components'
+import { CreateExamModal, DashboardLayout } from '@/presentation/components'
 
-export default function DashboardExams () {
+export default function DashboardExams() {
   const toast = useToast()
   const [searchTerm, setSearchTerm] = useState('')
+  const [foundExams, setFoundExams] = useState<ExamResponse[]>()
+  const createExameModal = useDisclosure()
 
-  const handlePatientSearch = () => {
-    if (searchTerm !== '') {
+  const handleExamSearch = async () => {
+    if (searchTerm === '') {
       toast({
-        status: 'success',
-        description: searchTerm,
+        status: 'warning',
+        description: 'Você precisa inserir uma informação na busca!',
         duration: 1000
       })
     } else {
-      toast({
-        status: 'warning',
-        description: 'Inseria o nome ou documento do paciente',
-        duration: 1000
-      })
+      const examsFound = await fetchExamSearch(searchTerm)
+      setFoundExams(examsFound)
     }
   }
 
   const fetchExams = async () => {
-    const { data } = await api.get('/api/exam/all')
+    const { data } = await api.get<ExamResponse[]>('/api/exam/all')
     return data
+  }
+
+  const { data: exams, isLoading, isError, refetch, isRefetching } = useQuery('exams', fetchExams, {
+    staleTime: 1000 * 60 * 60
+  })
+
+  const handleRefectch = async () => {
+    await refetch({ queryKey: 'exams' })
   }
 
   return (
@@ -66,6 +78,7 @@ export default function DashboardExams () {
           <Button
             variant={'outline'}
             colorScheme={'teal'}
+            onClick={createExameModal.onOpen}
           >
             Adicionar exame
           </Button>
@@ -80,10 +93,36 @@ export default function DashboardExams () {
             _hover={{
               backgroundColor: 'teal.500'
             }}
-            onClick={handlePatientSearch}
-            boxShadow={{ lg: 'lg'}}
+            onClick={handleExamSearch}
+            boxShadow={{ lg: 'lg' }}
           >
             Procurar
+          </Button>
+        </Flex>
+        <Flex
+          alignItems={'center'}
+          width={'100%'}
+          justifyContent={'flex-end'}
+          paddingY={2}
+          gap={2}
+        >
+          <Button
+            variant={'outline'}
+            colorScheme={'teal'}
+            onClick={() => setFoundExams(undefined)}
+            leftIcon={<RxUpdate />}
+            size={'xs'}
+          >
+            Limpar busca
+          </Button>
+          <Button
+            colorScheme={'teal'}
+            onClick={handleRefectch}
+            leftIcon={<RxUpdate />}
+            size={'xs'}
+            isLoading={isRefetching}
+          >
+            Atualizar
           </Button>
         </Flex>
         <Box
@@ -91,58 +130,105 @@ export default function DashboardExams () {
           borderColor={'gray.200'}
           borderRadius={{ lg: 'xl' }}
         >
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Nome</Th>
-                <Th>Documento</Th>
-                <Th></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {Array.from({ length: 10 }).map((item, index) => {
-                return (
-                  <Tr key={index}>
-                    <Td width={'65%'}>{faker.random.word()}</Td>
-                    <Td>{faker.finance.amount(7, 200, 2, 'R$')}</Td>
-                    <Td>
-                      <HStack
-                        justifyContent={'flex-end'}
-                      >
-                        <Tooltip label={'Ver exame'} borderRadius={'md'}>
-                          <IconButton
-                            aria-label='view-patient'
-                            title='teste'
-                            size={{ lg: 'sm' }}
-                          >
-                            <AiOutlineEye />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip label={'Editar exame'} borderRadius={'md'}>
-                          <IconButton
-                            aria-label='edit-patient'
-                            size={{ lg: 'sm' }}
-                          >
-                            <AiOutlineEdit />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip label={'Excluir exame'} borderRadius={'md'} bg={'red'}>
-                          <IconButton
-                            aria-label='edit-patient'
-                            size={{ lg: 'sm' }}
-                          >
-                            <BiTrashAlt />
-                          </IconButton>
-                        </Tooltip>
-                      </HStack>
-                    </Td>
+          {
+            isLoading ? (
+              <Box padding={4}>
+                <Spinner />
+              </Box>
+            ) : isError ? (
+              <Box padding={4}>
+                <Heading as='h2' fontSize={'lg'}>
+                  Ocorreu um erro ao encontrar os exames
+                </Heading>
+              </Box>
+            ) : (exams?.length === 0) ? (
+              <Box padding={4}>
+                <Heading as='h2' fontSize={'lg'} color={'gray.600'}>
+                  Você ainda não possui exames cadastrados
+                </Heading>
+              </Box>
+            ) : (
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>Exame</Th>
+                    <Th>Preço</Th>
+                    <Th></Th>
                   </Tr>
-                )
-              })}
-            </Tbody>
-          </Table>
+                </Thead>
+                <Tbody>
+                  {
+                    (foundExams !== undefined) ? (
+                      foundExams?.map((exam, index) => {
+                        return (
+                          <Tr key={index}>
+                            <Td width={'65%'}>{exam.name}</Td>
+                            <Td>{realFormatter.format(Number(exam.price))}</Td>
+                            <Td>
+                              <HStack
+                                justifyContent={'flex-end'}
+                              >
+                                <Tooltip label={'Editar paciente'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEdit />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Excluir paciente'} borderRadius={'md'} bg={'red'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <BiTrashAlt />
+                                  </IconButton>
+                                </Tooltip>
+                              </HStack>
+                            </Td>
+                          </Tr>
+                        )
+                      })
+                    ) : (
+                      exams?.map((exam, index) => {
+                        return (
+                          <Tr key={index}>
+                            <Td width={'65%'}>{exam.name}</Td>
+                            <Td>{realFormatter.format(Number(exam.price))}</Td>
+                            <Td>
+                              <HStack
+                                justifyContent={'flex-end'}
+                              >
+                                <Tooltip label={'Editar exame'} borderRadius={'md'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <AiOutlineEdit />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip label={'Excluir exame'} borderRadius={'md'} bg={'red'}>
+                                  <IconButton
+                                    aria-label='edit-patient'
+                                    size={{ lg: 'sm' }}
+                                  >
+                                    <BiTrashAlt />
+                                  </IconButton>
+                                </Tooltip>
+                              </HStack>
+                            </Td>
+                          </Tr>
+                        )
+                      })
+                    )
+                  }
+                </Tbody>
+              </Table>
+            )
+          }
         </Box>
       </DashboardLayout>
+      <CreateExamModal isOpen={createExameModal.isOpen} onClose={createExameModal.onClose} />
     </>
   )
 }
